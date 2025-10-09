@@ -26,23 +26,24 @@ OMD_ROOT = '/omd/sites/link_tripnet1'
 NOTIFY_WHAT = 'HOST' # SERVICE or HOST
 
 # Host Down
-NOTIFY_LASTHOSTSTATE = 'DOWN'
+NOTIFY_HOSTSTATE = 'DOWN'
 NOTIFY_HOSTOUTPUT = 'CRIT - No heartbeat since 2025-10-02 18:13:38 (check interval 1m)'
 
 # Service Critical
 NOTIFY_SERVICEURL = '/check_mk/index.py?start_url=view.py?view_name%3Dservice%26host%3Dtri-e2e-fin%26service%3DCheck_MK%26site%3Dlink_tripnet1'
-NOTIFY_LASTSERVICESTATE = 'CRITICAL'
+NOTIFY_SERVICESTATE = 'CRITICAL'
 NOTIFY_SERVICEDESC = 'Telia e2e test'
 NOTIFY_SERVICEOUTPUT = 'CRIT - No heartbeat since 2025-10-02 18:13:38 (check interval 1m)'
+ADD_INFO = ''
 
 
 def create_host_data():
-  data = "Host {} detected {}.\r\n'{}' ({}) is {}".format(NOTIFY_HOSTNAME, NOTIFY_LASTHOSTSTATE, NOTIFY_HOSTNAME, NOTIFY_HOSTADDRESS, NOTIFY_LASTHOSTSTATE)
+  data = "Host {} detected {}.\r\n'{}' ({}) is {}".format(NOTIFY_HOSTNAME, NOTIFY_HOSTSTATE, NOTIFY_HOSTNAME, NOTIFY_HOSTADDRESS, NOTIFY_HOSTSTATE)
   return data
 
 
 def create_service_data():
-  data = "Service {} detected {}\r\n.{} on {} has passed the threshold".format(NOTIFY_SERVICEDESC, NOTIFY_LASTSERVICESTATE, NOTIFY_SERVICEDESC, NOTIFY_HOSTNAME)
+  data = "Service {} detected {}\r\n.{} on {} has passed the threshold".format(NOTIFY_SERVICEDESC, NOTIFY_SERVICESTATE, NOTIFY_SERVICEDESC, NOTIFY_HOSTNAME)
   return data
 
 
@@ -51,3 +52,72 @@ def create_url():
         return CHECKMK_URL + ''+ NOTIFY_SERVICEURL
     else:
         return CHECKMK_URL+ NOTIFY_HOSTURL
+
+def get_env():
+  import os
+  # Common Env. Var.
+  temp = os.environ.get('NOTIFY_MONITORING_HOST')
+  if temp is not None:
+    global NOTIFY_MONITORING_HOST
+    NOTIFY_MONITORING_HOST = temp
+  temp = os.environ.get('OMD_ROOT')
+  if temp is not None:
+    global OMD_ROOT
+    OMD_ROOT = temp
+  temp = os.environ.get('NOTIFY_WHAT')
+  if temp is not None:
+    global NOTIFY_WHAT
+    NOTIFY_WHAT = temp
+  temp = os.environ.get('NOTIFY_SHORTDATETIME')
+  if temp is not None:
+    global NOTIFY_SHORTDATETIME
+    NOTIFY_SHORTDATETIME = temp
+
+  # Host Env. Var.
+  temp = os.environ.get('NOTIFY_HOSTNAME')
+  if temp is not None:
+    global NOTIFY_HOSTNAME
+    NOTIFY_HOSTNAME = temp
+  temp = os.environ.get('NOTIFY_HOSTADDRESS')
+  if temp is not None:
+    global NOTIFY_HOSTADDRESS
+    NOTIFY_HOSTADDRESS = temp
+  temp = os.environ.get('NOTIFY_HOSTSTATE')
+  if temp is not None:
+    global NOTIFY_HOSTSTATE
+    NOTIFY_HOSTSTATE = temp
+  temp = os.environ.get('NOTIFY_HOSTURL')
+  if temp is not None:
+    global NOTIFY_HOSTURL
+    NOTIFY_HOSTURL = temp
+  temp = os.environ.get('NOTIFY_HOSTOUTPUT')
+  if temp is not None:
+    global NOTIFY_HOSTOUTPUT
+    NOTIFY_HOSTOUTPUT = temp
+
+  # Service Env. Var.
+  temp = os.environ.get('NOTIFY_SERVICEDESC')
+  if temp is not None:
+    global NOTIFY_SERVICEDESC
+    NOTIFY_SERVICEDESC = temp
+  temp = os.environ.get('NOTIFY_SERVICESTATE')
+  if temp is not None:
+    global NOTIFY_SERVICESTATE
+    NOTIFY_SERVICESTATE = temp
+  temp = os.environ.get('NOTIFY_SERVICEURL')
+  if temp is not None:
+    global NOTIFY_SERVICEURL
+    NOTIFY_SERVICEURL = temp
+  temp = os.environ.get('NOTIFY_SERVICEOUTPUT')
+  if temp is not None:
+    global NOTIFY_SERVICEOUTPUT
+    NOTIFY_SERVICEOUTPUT = temp
+
+  global ADD_INFO
+  ADD_INFO = ('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12}'.format(NOTIFY_MONITORING_HOST, OMD_ROOT,
+                                                                              NOTIFY_SHORTDATETIME, NOTIFY_WHAT,
+                                                                              NOTIFY_HOSTNAME, NOTIFY_HOSTADDRESS,
+                                                                              NOTIFY_HOSTSTATE, NOTIFY_HOSTURL,
+                                                                              NOTIFY_HOSTOUTPUT, NOTIFY_SERVICEDESC,
+                                                                              NOTIFY_SERVICESTATE,
+                                                                              NOTIFY_SERVICEURL, NOTIFY_SERVICEOUTPUT))
