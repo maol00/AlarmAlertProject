@@ -8,9 +8,8 @@ from mongoengine import *
 import datetime
 from datetime import timezone
 
-#
 class Message(Document):
-  "Message model."
+  """Message model."""
   _id = StringField()
   HostName = StringField()
   Service = StringField()

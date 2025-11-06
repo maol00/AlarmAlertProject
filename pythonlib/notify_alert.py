@@ -1,5 +1,5 @@
 #!/bin/python3
-#  Notify alert to uaw database
+#  Notify alert to UAW database
 # Author: Mats Olsson
 # Version: 1.1
 # Date: 2025-10-08
@@ -11,11 +11,13 @@ import datetime
 import alert_common as common
 import alert_creator as creator
 
+
 # Get current timestamp as string
 def get_timestamp():
   now = datetime.datetime.now()
   timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
   return timestamp
+
 
 # Create base64 encoded id
 def create_id(hostname, service, timestamp):
@@ -26,17 +28,15 @@ def create_id(hostname, service, timestamp):
   return base64_id
 
 
-
 # Notify alert to uaw database
 def notify_alert():
   # Get environment var
-  debug_var = 'debug'
   common.get_env()
-  # Check that we have down state for Host
+  # Check that we have down state for Host or Critical for Service
   if common.NOTIFY_WHAT == 'HOST' and common.NOTIFY_HOSTSTATE == 'UP':
     exit(0)
   if common.NOTIFY_WHAT == 'SERVICE' and common.NOTIFY_SERVICESTATE != 'CRITICAL':
-    exit(0) 
+    exit(0)
   if common.NOTIFY_WHAT == 'HOST':
     data = common.create_host_data()
     service = common.NOTIFY_HOSTNAME
@@ -44,7 +44,7 @@ def notify_alert():
     data = common.create_service_data()
     service = common.NOTIFY_SERVICEDESC
 
-  additionalInfo = common.ADD_INFO + '  ' + debug_var
+  additionalInfo = common.ADD_INFO
   hostname = common.NOTIFY_HOSTNAME
   url = common.create_url()
   timestamp = get_timestamp()

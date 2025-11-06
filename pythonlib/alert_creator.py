@@ -13,13 +13,13 @@ from mongoengine.connection import disconnect
 
 class MessageCreator:
   def __init__(self, dbhost):
-    # connect(db='AddSecure-Op5', host=dbhost, username=common.db_user, password=common.db_password, authentication_source='admin')
-    connect(db='AddSecure-Link', host=dbhost, username=common.db_user, password=common.db_password,
-            authentication_source='admin')
+    connect(db='AddSecure-Op5', host=dbhost, username=common.db_user, password=common.db_password, authentication_source='admin')
+    #connect(db='AddSecure-Link', host=dbhost, username=common.db_user, password=common.db_password,
+     #       authentication_source='admin')
 
-  def create_message(self, hostname, service, data, additionalInfo, url, timestamp, id):
+  def create_message(self, hostname, service, data, additionalInfo, url, timestamp, Id):
     message = Message.Message(
-      _id=id,
+      _id=Id,
       HostName=hostname,
       Service=service,
       Data=data,

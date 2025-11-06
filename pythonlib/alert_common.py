@@ -1,57 +1,63 @@
 #!/bin/python
-# Author: Andreas Lindh
-# Version: 1.0
-# Date: 2020-04-21
+# Author: Mats
+# Version: 1.1
+# Date: 2025-10-21
 
+from datetime import datetime, timezone
 
 # Database connection settings
-db_host = "85.117.170.46"
+db_host = "85.117.160.5"
+#db_host = "85.117.170.46"
 db_user = "op5-admin"
-db_user="iot-dbadmin"
+#db_user = "iot-dbadmin"
 db_password = "qTLdgz8x6jNuFOSKH4JX"
-db_password = "uRHqVhVmz6zGuHM7JSi9"
+#db_password = "uRHqVhVmz6zGuHM7JSi9"
 
 # Set mock to "" to write to db
 mock = None
+now = datetime.now()
 
-## NOTIFY Environment variables
+# NOTIFY Environment variables
 # Common
-CHECKMK_URL='https://tri2-web-checkmk.iot.addsecure.com/link_cmkweb'
-NOTIFY_HOSTNAME ='tri-e2e-fin'
-NOTIFY_HOSTADDRESS = '100.123.1.1'
-NOTIFY_SHORTDATETIME ='2025-10-02 18:13:38'
-NOTIFY_HOSTURL = '/check_mk/index.py?start_url=view.py?view_name%3Dhoststatus%26host%3Dtri-e2e-sthlm%26site%3Dlink_tripnet1'
+CHECKMK_URL = 'https://tri2-web-checkmk.iot.addsecure.com/link_cmkweb'
+NOTIFY_HOSTNAME = 'tri1-checkmk-test'
+NOTIFY_HOSTADDRESS = '85.117.171.70'
+NOTIFY_SHORTDATETIME = now.strftime('%Y-%m-%d %H:%M:%S')
+NOTIFY_HOSTURL = '/check_mk/index.py?start_url=%2Flink_cmkweb%2Fcheck_mk%2Fview.py%3Fhost%3Dtri1-checkmk-test%26site%3Dlink_tripnet1%26view_name%3Dhost'
 NOTIFY_MONITORING_HOST = 'tri1-checkmk.iot.addsecure.com'
 OMD_ROOT = '/omd/sites/link_tripnet1'
-NOTIFY_WHAT = 'HOST' # SERVICE or HOST
+NOTIFY_WHAT = 'SERVICE'  # SERVICE or HOST
 
 # Host Down
 NOTIFY_HOSTSTATE = 'DOWN'
 NOTIFY_HOSTOUTPUT = 'CRIT - No heartbeat since 2025-10-02 18:13:38 (check interval 1m)'
 
 # Service Critical
-NOTIFY_SERVICEURL = '/check_mk/index.py?start_url=view.py?view_name%3Dservice%26host%3Dtri-e2e-fin%26service%3DCheck_MK%26site%3Dlink_tripnet1'
+NOTIFY_SERVICEURL = '/check_mk/index.py?start_url=%2Flink_cmkweb%2Fcheck_mk%2Fview.py%3Fhost%3Dtri1-checkmk-test%26service%3DFilesystem%2B%252F%26site%3Dlink_tripnet1%26view_name%3Dservice'
 NOTIFY_SERVICESTATE = 'CRITICAL'
-NOTIFY_SERVICEDESC = 'Telia e2e test'
+NOTIFY_SERVICEDESC = 'Filesystem'
 NOTIFY_SERVICEOUTPUT = 'CRIT - No heartbeat since 2025-10-02 18:13:38 (check interval 1m)'
 ADD_INFO = ''
 
 
 def create_host_data():
-  data = "Host {} detected {}.\r\n'{}' ({}) is {}".format(NOTIFY_HOSTNAME, NOTIFY_HOSTSTATE, NOTIFY_HOSTNAME, NOTIFY_HOSTADDRESS, NOTIFY_HOSTSTATE)
+  data = "Host {} detected {}.\r\n'{}' ({}) is {}".format(NOTIFY_HOSTNAME, NOTIFY_HOSTSTATE, NOTIFY_HOSTNAME,
+                                                          NOTIFY_HOSTADDRESS, NOTIFY_HOSTSTATE)
   return data
 
 
 def create_service_data():
-  data = "Service {} detected {}\r\n.{} on {} has passed the threshold".format(NOTIFY_SERVICEDESC, NOTIFY_SERVICESTATE, NOTIFY_SERVICEDESC, NOTIFY_HOSTNAME)
+  data = "Service {} detected {}\r\n.{} on {} has passed the threshold".format(NOTIFY_SERVICEDESC, NOTIFY_SERVICESTATE,
+                                                                               NOTIFY_SERVICEDESC, NOTIFY_HOSTNAME)
   return data
 
 
 def create_url():
-    if NOTIFY_WHAT == 'SERVICE':
-        return CHECKMK_URL + ''+ NOTIFY_SERVICEURL
-    else:
-        return CHECKMK_URL+ NOTIFY_HOSTURL
+  if NOTIFY_WHAT == 'SERVICE':
+    return CHECKMK_URL + '' + NOTIFY_SERVICEURL
+  else:
+    return CHECKMK_URL + NOTIFY_HOSTURL
+
 
 def get_env():
   import os
@@ -121,3 +127,4 @@ def get_env():
                                                                               NOTIFY_HOSTOUTPUT, NOTIFY_SERVICEDESC,
                                                                               NOTIFY_SERVICESTATE,
                                                                               NOTIFY_SERVICEURL, NOTIFY_SERVICEOUTPUT))
+  ADD_INFO = ('{0} ({1}). Monitoring source: {2} '.format(NOTIFY_HOSTNAME, NOTIFY_HOSTADDRESS, NOTIFY_MONITORING_HOST))
