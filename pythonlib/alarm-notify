@@ -1,0 +1,20 @@
+#!/bin/python3
+# Alarm handler (Notification)
+# Author: Mats Olsson
+# Date:2025-10-28
+# Purpose: Use thi plugin to sedn notification to UAW
+# Read implemetation guidelines in svn
+# ***************************************************
+
+import os
+import sys
+import notify_alert as notify
+notify.notify_alert()
+
+## Debug code
+#with open("/opt/omd/sites/link_tripnet1/tmp/alert-notify.env", "w", encoding="utf-8") as f:
+#    f.write("Hello World.\n")
+#    f.write(os.environ.get('USER')+'\n')
+#    f.write('#'.join(sys.path))
+exit(0) 
+
